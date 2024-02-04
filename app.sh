@@ -26,7 +26,6 @@ esac
 RENT_MENU(){
    # get available bikes
    AVAILABLE_BIKES=$($PSQL "SELECT bike_id, type, size FROM bikes WHERE available = true ORDER BY bike_id")
-   echo "$AVAILABLE_BIKES"
    # if no bikes available
    if [[ -z $AVAILABLE_BIKES ]]
    then
@@ -35,12 +34,20 @@ RENT_MENU(){
    else
    # display available bikes
    echo -e "\nHere are the bikes we have available:"
-   echo "$AVAILABLE_BIKES"
+   echo "$AVAILABLE_BIKES" | while read BIKE_ID BAR TYPE BAR SIZE
+   do
+      echo "$BIKE_ID) $SIZE\" $TYPE Bike"
+   done
    # ask for bike to rent
+   echo -e "\nWhich one would you like to rent?"
+   read BIKE_ID_TO_RENT
+
    # if input is not a number
-   # send to main menu 
+   if [[ ! $BIKE_ID_TO_RENT =~ ^[0-9]+$ ]]
+   then
+      MAIN_MENU "That is not a valid bike number."
    fi
-   # send to main menu
+fi
 }
 
 RETURN_MENU(){
