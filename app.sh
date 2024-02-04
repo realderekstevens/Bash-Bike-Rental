@@ -24,8 +24,10 @@ esac
 }
 
 RENT_MENU(){
+   # get available bikes
    AVAILABLE_BIKES=$($PSQL "SELECT bike_id, type, size FROM bikes WHERE available = true ORDER BY bike_id")
    echo "$AVAILABLE_BIKES"
+
 }
 
 RETURN_MENU(){
@@ -33,7 +35,7 @@ RETURN_MENU(){
 }
 
 EXIT(){
-   echo "Thank you for stopping in."
+   echo -e "\nThank you for stopping in.\n"
 }
 
 MAIN_MENU
