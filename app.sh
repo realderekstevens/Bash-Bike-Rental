@@ -1,7 +1,7 @@
 #!/bin/bash
 #https://www.youtube.com/watch?v=3s3IUCKkJ1k
 #https://github.com/freeCodeCamp/learn-bash-and-sql-by-building-a-bike-rental-shop/blob/main/TUTORIAL.md
-
+# Left off At 7:30 on Youtube Video
 
 PSQL="psql -X --username=postgres --dbname=bikes --tuples-only -c"
 PSQL_CreateDatabase="psql -X --username=postgres --dbname=postgres --tuples-only -c"
