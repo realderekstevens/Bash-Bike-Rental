@@ -29,7 +29,7 @@ DATABASE_MANAGEMENT_MENU(){
       echo -e "\n$1"
    fi
    echo -e "\n~~~~~ DATABASE MANAGEMENT MENU ~~~~~"
-   echo -e "\n0. Return To Main Menu\n1. Create Database\n2. Create Table Bikes\n3. Create Table Customers\n4. Delete Database\n5. Delete Table Bikes\n6. List Databases\n7. List Tables\n8. Show Schema Table Bikes\n"
+   echo -e "\n0. Return To Main Menu\n1. Create Database\n2. Create Table Bikes\n3. Create Table Customers\n4. Delete Database\n5. Delete Table Bikes\n6. List Databases\n7. List Tables\n8. Show Schema Table Bikes\n9. Show Schema Table Customers\n"
    echo "Enter Command: "
    read DATABASE_MANAGEMENT_MENU_SELECTION
    case $DATABASE_MANAGEMENT_MENU_SELECTION in
@@ -42,6 +42,7 @@ DATABASE_MANAGEMENT_MENU(){
    6) LIST_DATABASES ;;
    7) LIST_TABLES ;;
    8) LIST_TABLE_BIKES ;;
+   9) LIST_TABLE_CUSTOMERS ;;
    *) DATABASE_MANAGEMENT_MENU "Please enter a valid option." ;;
 esac
 }
@@ -63,6 +64,7 @@ CREATE_TABLE_BIKES(){
 
 CREATE_TABLE_CUSTOMERS(){
 	$PSQL "CREATE TABLE customers();"
+	$PSQL "ALTER TABLE customers ADD COLUMN customer_id SERIAL PRIMARY KEY;"
 	DATABASE_MANAGEMENT_MENU
 }
 
@@ -96,6 +98,12 @@ LIST_TABLE_BIKES(){
 	$PSQL "\d bikes"
 	DATABASE_MANAGEMENT_MENU "Listed Table Bikes"
 }
+
+LIST_TABLE_CUSTOMERS(){
+	$PSQL "\d customers"
+	DATABASE_MANAGEMENT_MENU "Listed Table Customers"
+}
+
 
 DELETE_TABLE_BIKES(){
 	$PSQL "DROP TABLE bikes;"
