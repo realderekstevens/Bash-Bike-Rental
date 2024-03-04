@@ -13,7 +13,7 @@ MAIN_MENU(){
    fi
    echo -e "\n~~~~~ Bike Rental Shop ~~~~~"
    echo "How may I help you?"
-   echo -e "\n0. Create Database\n1. Delete Database\n2. Rent a Bike \n3. Return a Bike\n4. Exit\n5. List Databases\n6. Create Table Bikes\n7. List Tables\n8. Show Schema Table Bikes\n"
+   echo -e "\n0. Create Database\n1. Delete Database\n2. Rent a Bike \n3. Return a Bike\n4. Exit\n5. List Databases\n6. Create Table Bikes\n7. List Tables\n8. Show Schema Table Bikes\n9. Drop Table Bikes\n"
    echo "Enter Command: "
    read MAIN_MENU_SELECTION
    case $MAIN_MENU_SELECTION in
@@ -26,6 +26,7 @@ MAIN_MENU(){
    6) CREATE_TABLE_BIKES ;;
    7) LIST_TABLES ;;
    8) LIST_TABLE_BIKES ;;
+   9) DROP_TABLE_BIKES ;;
    *) MAIN_MENU "Please enter a valid option." ;;
 esac
 }
@@ -58,6 +59,7 @@ CREATE_TABLE_BIKES(){
 	$PSQL "CREATE TABLE bikes();"
 	$PSQL "ALTER TABLE bikes ADD COLUMN bike_id SERIAL PRIMARY KEY;"
 	$PSQL "ALTER TABLE bikes ADD COLUMN type VARCHAR(50) NOT NULL;"
+	$PSQL "ALTER TABLE bikes ADD COLUMN size INT NOT NULL;"
 	MAIN_MENU "Created Tables Bikes"
 	
 }
@@ -70,6 +72,11 @@ LIST_TABLES(){
 LIST_TABLE_BIKES(){
 	$PSQL "\d bikes"
 	MAIN_MENU "Listed Table Bikes"
+}
+
+DROP_TABLE_BIKES(){
+	$PSQL "DROP TABLE bikes;"
+	MAIN_MENU "Dropped Table Bikes"
 }
 
 MAIN_MENU
