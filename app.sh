@@ -29,7 +29,7 @@ DATABASE_MANAGEMENT_MENU(){
       echo -e "\n$1"
    fi
    echo -e "\n~~~~~ DATABASE MANAGEMENT MENU ~~~~~"
-   echo -e "\n0. Return To Main Menu\n1. Create Database\n2. Create Table Bikes\n3. Create Table Customers\n4. Delete Database\n5. Delete Table Bikes\n6. List Databases\n7. List Tables\n8. Show Schema Table Bikes\n9. Show Schema Table Customers\n"
+   echo -e "\n0. Return To Main Menu\n1. Create Database\n2. Create Table Bikes\n3. Create Table Customers\n4. Delete Database\n5. Delete Table Bikes\n6. List Databases\n7. List Tables\n8. Show Schema Table Bikes\n9. Show Schema Table Customers\n10. Create Table Rentals\n11. List Table Rentals\n"
    echo "Enter Command: "
    read DATABASE_MANAGEMENT_MENU_SELECTION
    case $DATABASE_MANAGEMENT_MENU_SELECTION in
@@ -43,6 +43,8 @@ DATABASE_MANAGEMENT_MENU(){
    7) LIST_TABLES ;;
    8) LIST_TABLE_BIKES ;;
    9) LIST_TABLE_CUSTOMERS ;;
+   10) CREATE_TABLE_RENTALS ;;
+   11) LIST_TABLE_RENTALS ;;
    *) DATABASE_MANAGEMENT_MENU "Please enter a valid option." ;;
 esac
 }
@@ -65,6 +67,16 @@ CREATE_TABLE_BIKES(){
 CREATE_TABLE_CUSTOMERS(){
 	$PSQL "CREATE TABLE customers();"
 	$PSQL "ALTER TABLE customers ADD COLUMN customer_id SERIAL PRIMARY KEY;"
+	$PSQL "ALTER TABLE customers ADD COLUMN phone INT NOT NULL UNIQUE;"
+	$PSQL "ALTER TABLE customers ADD COLUMN name VARCHAR(40) NOT NULL;"
+	DATABASE_MANAGEMENT_MENU
+}
+
+CREATE_TABLE_RENTALS(){
+	$PSQL "CREATE TABLE rentals();"
+	$PSQL "ALTER TABLE rentals ADD COLUMN rental_id SERIAL PRIMARY KEY;"
+	$PSQL "ALTER TABLE rentals ADD COLUMN customer_id INT NOT NULL UNIQUE;"
+	$PSQL "ALTER TABLE rentals ADD FOREIGN KEY(customer_id) REFERENCES customers(customer_id);"
 	DATABASE_MANAGEMENT_MENU
 }
 
@@ -102,6 +114,11 @@ LIST_TABLE_BIKES(){
 LIST_TABLE_CUSTOMERS(){
 	$PSQL "\d customers"
 	DATABASE_MANAGEMENT_MENU "Listed Table Customers"
+}
+
+LIST_TABLE_RENTALS(){
+	$PSQL "\d rentals"
+	DATABASE_MANAGEMENT_MENU "Listed Table Rentals"
 }
 
 
