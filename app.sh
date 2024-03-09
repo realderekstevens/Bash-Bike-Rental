@@ -235,7 +235,8 @@ INSERT_EXAMPLE_BIKES_DATA(){
 
 
 SELECT_ALL_BIKES(){
-	$PSQL "SELECT * FROM bikes"
+	AVAILABLE_BIKES=$($PSQL "SELECT bike_id, type, size FROM bikes WHERE available=TRUE ORDER BY bike_id")
+	echo "$AVAILABLE_BIKES"
 	SELECT_DATA_MENU
 }
 
@@ -245,7 +246,9 @@ SELECT_ALL_BIKES(){
 
 
 RENT_MENU(){
-	echo "Return Menu"
+	# Get Available Bikes
+	AVAILABLE_BIKES=$($PSQL "SELECT bike_id, type, size FROM bikes WHERE available=TRUE ORDER BY bike_id")
+	echo "$AVAILABLE_BIKES"
 MAIN_MENU
 }
 RETURN_MENU(){
