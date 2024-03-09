@@ -1,7 +1,7 @@
 #!/bin/bash
 #https://www.youtube.com/watch?v=3s3IUCKkJ1k
 #https://github.com/freeCodeCamp/learn-bash-and-sql-by-building-a-bike-rental-shop/blob/main/TUTORIAL.md
-# Left off At 7:30 on Youtube Video
+# Left off At 19:43 on Youtube Video
 
 PSQL="psql -X --username=postgres --dbname=bikes --tuples-only -c"
 PSQL_CreateDatabase="psql -X --username=postgres --dbname=postgres --tuples-only -c"
@@ -12,13 +12,14 @@ MAIN_MENU(){
       echo -e "\n$1"
    fi
    echo -e "\n~~~~~ Bike Rental Shop ~~~~~"
-   echo -e "\n0. Database Management Menu\n1. Rent Menu\n2. Exit Program\n"
+   echo -e "\n0. Database Management Menu\n1. Rent a Bike\n2. Return a Bike\n3. Exit Program\n"
    echo "Enter Command: "
    read MAIN_MENU_SELECTION
    case $MAIN_MENU_SELECTION in
    0) DATABASE_MANAGEMENT_MENU ;;
    1) RENT_MENU ;;
-   2) EXIT ;;
+   2) RETURN_MENU ;;
+   3) EXIT ;;
    *) MAIN_MENU "Please enter a valid option." ;;
 esac
 }
@@ -169,23 +170,23 @@ CREATE_TABLE_RENTALS(){
 
 LIST_DATABASES(){
 	$PSQL_CreateDatabase "\l"
-	DATABASE_MANAGEMENT_MENU "Listed Databases"
+	LIST_SCHEMA_MENU "Listed Databases"
 }
 LIST_TABLES(){
 	$PSQL "\dt+"
-	DATABASE_MANAGEMENT_MENU "Listed Tables"
+	LIST_SCHEMA_MENU "Listed Tables"
 }
 LIST_TABLE_BIKES(){
 	$PSQL "\d bikes"
-	DATABASE_MANAGEMENT_MENU "Listed Table Bikes"
+	LIST_SCHEMA_MENU "Listed Table Bikes"
 }
 LIST_TABLE_CUSTOMERS(){
 	$PSQL "\d customers"
-	DATABASE_MANAGEMENT_MENU "Listed Table Customers"
+	LIST_SCHEMA_MENU "Listed Table Customers"
 }
 LIST_TABLE_RENTALS(){
 	$PSQL "\d rentals"
-	DATABASE_MANAGEMENT_MENU "Listed Table Rentals"
+	LIST_SCHEMA_MENU "Listed Table Rentals"
 }
 
 
@@ -237,6 +238,22 @@ SELECT_ALL_BIKES(){
 	$PSQL "SELECT * FROM bikes"
 	SELECT_DATA_MENU
 }
+
+
+
+
+
+
+RENT_MENU(){
+	echo "Return Menu"
+MAIN_MENU
+}
+RETURN_MENU(){
+	echo "Return Menu"
+MAIN_MENU
+}
+
+
 
 
 EXIT(){
