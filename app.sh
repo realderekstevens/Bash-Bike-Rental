@@ -157,13 +157,14 @@ UPDATE_DATA_MENU(){
       echo -e "\n$1"
    fi
    echo -e "\n~~~~~ Update Bikes Available ~~~~~"
-   echo -e "\n0. Return To Database Management Menu\n1. Update All Bikes as Available\n2. Update All Bikes as Unavailable\n"
+   echo -e "\n0. Return To Database Management Menu\n1. Update All Bikes as Available\n2. Update All Bikes as Unavailable\n3. Update all bikes available except BMX\n"
    echo "Enter Command: "
    read UPDATE_MENU_SELECTION
    case $UPDATE_MENU_SELECTION in
    0) DATABASE_MANAGEMENT_MENU ;;
    1) UPDATE_ALL_BIKES_AVAILABLE ;;
    2) UPDATE_ALL_BIKES_UNAVAILABLE ;;
+   3) UPDATE_ALL_BIKES_AVAILABLE_EXCEPT_BMX ;;
    *) SELECT_DATA_MENU "Please enter a valid option." ;;
 esac
 }
@@ -285,6 +286,10 @@ SELECT_ALL_BIKES(){
 
 UPDATE_ALL_BIKES_AVAILABLE(){
 	AVAILABLE_BIKES=$($PSQL "UPDATE bikes SET AVAILABLE = true;")
+	UPDATE_DATA_MENU
+}
+UPDATE_ALL_BIKES_AVAILABLE_EXCEPT_BMX(){
+	AVAILABLE_BIKES=$($PSQL "UPDATE bikes SET available = TRUE WHERE type != 'BMX';")
 	UPDATE_DATA_MENU
 }
 UPDATE_ALL_BIKES_UNAVAILABLE(){
