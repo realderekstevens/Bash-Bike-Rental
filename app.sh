@@ -1,7 +1,7 @@
 #!/bin/bash
 #https://www.youtube.com/watch?v=3s3IUCKkJ1k
 #https://github.com/freeCodeCamp/learn-bash-and-sql-by-building-a-bike-rental-shop/blob/main/TUTORIAL.md
-# Left off At 19:43 on Youtube Video
+# Left off At 29:38 on Youtube Video
 
 PSQL="psql -X --username=postgres --dbname=bikes --tuples-only -c"
 PSQL_CreateDatabase="psql -X --username=postgres --dbname=postgres --tuples-only -c"
@@ -29,7 +29,7 @@ DATABASE_MANAGEMENT_MENU(){
       echo -e "\n$1"
    fi
    echo -e "\n~~~~~ DATABASE MANAGEMENT MENU ~~~~~"
-   echo -e "\n0. Return To Main Menu\n1. List Schema Menu\n2. Create Databases & Tables Menu\n3. Delete Databases & Tables Menu\n4. Insert Data Menu\n5. Select Data Menu\n"
+   echo -e "\n0. Return To Main Menu\n1. List Schema Menu\n2. Create Databases & Tables Menu\n3. Delete Databases & Tables Menu\n4. Insert Data Menu\n5. Select Data Menu\n6. Update Bikes Menu\n"
    echo "Enter Command: "
    read DATABASE_MANAGEMENT_MENU_SELECTION
    case $DATABASE_MANAGEMENT_MENU_SELECTION in
@@ -39,6 +39,7 @@ DATABASE_MANAGEMENT_MENU(){
    3) DELETE_DATABASE_MANAGEMENT_MENU ;;
    4) INSERT_DATA_MENU ;;
    5) SELECT_DATA_MENU ;;
+   6) UPDATE_DATA_MENU ;;
    *) DATABASE_MANAGEMENT_MENU "Please enter a valid option." ;;
 esac
 }
@@ -127,7 +128,22 @@ SELECT_DATA_MENU(){
    *) SELECT_DATA_MENU "Please enter a valid option." ;;
 esac
 }
-
+UPDATE_DATA_MENU(){
+   if [[ $1 ]]
+   then
+      echo -e "\n$1"
+   fi
+   echo -e "\n~~~~~ Update Bikes Available ~~~~~"
+   echo -e "\n0. Return To Database Management Menu\n1. Update All Bikes as Available\n2. Update All Bikes as Unavailable\n"
+   echo "Enter Command: "
+   read UPDATE_MENU_SELECTION
+   case $UPDATE_MENU_SELECTION in
+   0) DATABASE_MANAGEMENT_MENU ;;
+   1) UPDATE_ALL_BIKES_AVAILABLE ;;
+   2) UPDATE_ALL_BIKES_UNAVAILABLE ;;
+   *) SELECT_DATA_MENU "Please enter a valid option." ;;
+esac
+}
 
 
 
@@ -241,6 +257,17 @@ SELECT_ALL_BIKES(){
 }
 
 
+
+
+
+UPDATE_ALL_BIKES_AVAILABLE(){
+	AVAILABLE_BIKES=$($PSQL "UPDATE bikes SET AVAILABLE = true;")
+	UPDATE_DATA_MENU
+}
+UPDATE_ALL_BIKES_UNAVAILABLE(){
+	AVAILABLE_BIKES=$($PSQL "UPDATE bikes SET AVAILABLE = false;")
+	UPDATE_DATA_MENU
+}
 
 
 
