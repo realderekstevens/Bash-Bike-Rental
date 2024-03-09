@@ -23,6 +23,29 @@ MAIN_MENU(){
    *) MAIN_MENU "Please enter a valid option." ;;
 esac
 }
+RENT_MENU(){
+	# Get Available Bikes
+	AVAILABLE_BIKES=$($PSQL "SELECT bike_id, type, size FROM bikes WHERE available=TRUE ORDER BY bike_id")
+	echo "$AVAILABLE_BIKES"
+	# If no bikes available
+	if [[ -z $AVAILABLE_BIKES ]]
+	then
+		MAIN_MENU "No bikes available right now."
+	else
+	# Display available bikes
+	echo -e "\nHere are the bikes we have available: " 
+	echo "$AVAILABLE_BIKES"
+	# Ask for bikes to rent
+	# if input is not a number
+	# Send to main menu
+	
+	fi
+MAIN_MENU
+}
+RETURN_MENU(){
+	echo "Return Menu"
+MAIN_MENU
+}
 DATABASE_MANAGEMENT_MENU(){
    if [[ $1 ]]
    then
@@ -272,16 +295,7 @@ UPDATE_ALL_BIKES_UNAVAILABLE(){
 
 
 
-RENT_MENU(){
-	# Get Available Bikes
-	AVAILABLE_BIKES=$($PSQL "SELECT bike_id, type, size FROM bikes WHERE available=TRUE ORDER BY bike_id")
-	echo "$AVAILABLE_BIKES"
-MAIN_MENU
-}
-RETURN_MENU(){
-	echo "Return Menu"
-MAIN_MENU
-}
+
 
 
 
