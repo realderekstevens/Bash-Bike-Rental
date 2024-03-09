@@ -1,7 +1,4 @@
 #!/bin/bash
-#https://www.youtube.com/watch?v=3s3IUCKkJ1k
-#https://github.com/freeCodeCamp/learn-bash-and-sql-by-building-a-bike-rental-shop/blob/main/TUTORIAL.md
-# Left off At 29:38 on Youtube Video
 
 PSQL="psql -X --username=postgres --dbname=bikes --tuples-only -c"
 PSQL_CreateDatabase="psql -X --username=postgres --dbname=postgres --tuples-only -c"
@@ -23,6 +20,7 @@ MAIN_MENU(){
    *) MAIN_MENU "Please enter a valid option." ;;
 esac
 }
+
 RENT_MENU(){
 	# Get Available Bikes
 	AVAILABLE_BIKES=$($PSQL "SELECT bike_id, type, size FROM bikes WHERE available = true ORDER BY bike_id")
@@ -95,7 +93,6 @@ RENT_MENU(){
   fi
 }
 		
-
 RETURN_MENU() {
   #get customer info
   echo -e "\nWhat's your phone number?"
@@ -156,6 +153,7 @@ RETURN_MENU() {
     fi
   fi
 }
+
 DATABASE_MANAGEMENT_MENU(){
    if [[ $1 ]]
    then
@@ -176,6 +174,9 @@ DATABASE_MANAGEMENT_MENU(){
    *) DATABASE_MANAGEMENT_MENU "Please enter a valid option." ;;
 esac
 }
+
+## Show Schema Management ##
+
 LIST_SCHEMA_MENU(){
    if [[ $1 ]]
    then
@@ -195,6 +196,34 @@ LIST_SCHEMA_MENU(){
    *) LIST_SCHEMA_MENU "Please enter a valid option." ;;
 esac
 }
+
+LIST_DATABASES(){
+	$PSQL_CreateDatabase "\l"
+	LIST_SCHEMA_MENU "Listed Databases"
+}
+
+LIST_TABLES(){
+	$PSQL "\dt+"
+	LIST_SCHEMA_MENU "Listed Tables"
+}
+
+LIST_TABLE_BIKES(){
+	$PSQL "\d bikes"
+	LIST_SCHEMA_MENU "Listed Table Bikes"
+}
+
+LIST_TABLE_CUSTOMERS(){
+	$PSQL "\d customers"
+	LIST_SCHEMA_MENU "Listed Table Customers"
+}
+
+LIST_TABLE_RENTALS(){
+	$PSQL "\d rentals"
+	LIST_SCHEMA_MENU "Listed Table Rentals"
+}
+
+## Create Database & Table Management ##
+
 CREATE_DATABASE_AND_TABLES_MENU(){
    if [[ $1 ]]
    then
@@ -213,6 +242,44 @@ CREATE_DATABASE_AND_TABLES_MENU(){
    *) CREATE_DATABASE_AND_TABLES_MENU "Please enter a valid option." ;;
 esac
 }
+
+CREATE_DATABASE(){
+	$PSQL_CreateDatabase "CREATE DATABASE bikes;"
+	CREATE_DATABASE_AND_TABLES_MENU
+}
+
+CREATE_TABLE_BIKES(){
+	$PSQL "CREATE TABLE bikes();"
+	$PSQL "ALTER TABLE bikes ADD COLUMN bike_id SERIAL PRIMARY KEY;"
+	$PSQL "ALTER TABLE bikes ADD COLUMN type VARCHAR(50) NOT NULL;"
+	$PSQL "ALTER TABLE bikes ADD COLUMN size INT NOT NULL;"
+	$PSQL "ALTER TABLE bikes ADD COLUMN available boolean NOT NULL Default(TRUE)";
+	CREATE_DATABASE_AND_TABLES_MENU "Created Tables Bikes"
+	
+}
+
+CREATE_TABLE_CUSTOMERS(){
+	$PSQL "CREATE TABLE customers();"
+	$PSQL "ALTER TABLE customers ADD COLUMN customer_id SERIAL PRIMARY KEY;"
+	$PSQL "ALTER TABLE customers ADD COLUMN phone VARCHAR(15) NOT NULL UNIQUE;"
+	$PSQL "ALTER TABLE customers ADD COLUMN name VARCHAR(40) NOT NULL;"
+	CREATE_DATABASE_AND_TABLES_MENU
+}
+
+CREATE_TABLE_RENTALS(){
+	$PSQL "CREATE TABLE rentals();"
+	$PSQL "ALTER TABLE rentals ADD COLUMN rental_id SERIAL PRIMARY KEY;"
+	$PSQL "ALTER TABLE rentals ADD COLUMN customer_id INT NOT NULL UNIQUE;"
+	$PSQL "ALTER TABLE rentals ADD FOREIGN KEY(customer_id) REFERENCES customers(customer_id);"
+	$PSQL "ALTER TABLE rentals ADD COLUMN bike_id INT NOT NULL;"
+	$PSQL "ALTER TABLE rentals ADD FOREIGN KEY(bike_id) REFERENCES bikes(bike_id);"
+	$PSQL "ALTER TABLE rentals ADD COLUMN date_rented DATE NOT NULL Default(Now());"
+	$PSQL "ALTER TABLE rentals ADD COLUMN date_returned DATE;"
+	CREATE_DATABASE_AND_TABLES_MENU
+}
+
+## Delete Database & Table Management ##
+
 DELETE_DATABASE_MANAGEMENT_MENU(){
    if [[ $1 ]]
    then
@@ -231,6 +298,29 @@ DELETE_DATABASE_MANAGEMENT_MENU(){
    *) DELETE_DATABASE_MANAGEMENT_MENU "Please enter a valid option." ;;
 esac
 }
+
+DELETE_DATABASE(){
+	$PSQL_CreateDatabase "DROP DATABASE bikes;"
+	DELETE_DATABASE_MANAGEMENT_MENU
+}
+
+DELETE_TABLE_BIKES(){
+	$PSQL "DROP TABLE bikes;"
+	DELETE_DATABASE_MANAGEMENT_MENU
+}
+
+DELETE_TABLE_CUSTOMERS(){
+	$PSQL "DROP TABLE customers;"
+	DELETE_DATABASE_MANAGEMENT_MENU
+}
+
+DELETE_TABLE_RENTALS(){
+	$PSQL "DROP TABLE rentals;"
+	DELETE_DATABASE_MANAGEMENT_MENU
+}
+
+## Insert Data Management ##
+
 INSERT_DATA_MENU(){
    if [[ $1 ]]
    then
@@ -246,6 +336,22 @@ INSERT_DATA_MENU(){
    *) INSERT_DATA_MENU "Please enter a valid option." ;;
 esac
 }
+
+INSERT_EXAMPLE_BIKES_DATA(){
+	$PSQL "INSERT INTO bikes (type, size) VALUES ('Mountain', 27);"
+	$PSQL "INSERT INTO bikes (type, size) VALUES ('Mountain', 28);"
+	$PSQL "INSERT INTO bikes (type, size) VALUES ('Mountain', 29);"
+	$PSQL "INSERT INTO bikes (type, size) VALUES ('Road', 27);"
+	$PSQL "INSERT INTO bikes (type, size) VALUES ('Road', 28);"
+	$PSQL "INSERT INTO bikes (type, size) VALUES ('Road', 29);"
+	$PSQL "INSERT INTO bikes (type, size) VALUES ('BMX', 19);"
+	$PSQL "INSERT INTO bikes (type, size) VALUES ('BMX', 20);"
+	$PSQL "INSERT INTO bikes (type, size) VALUES ('BMX', 21);"
+	DATABASE_MANAGEMENT_MENU "Inserted Example Bikes"
+}
+
+## Data Selection Management ##
+
 SELECT_DATA_MENU(){
    if [[ $1 ]]
    then
@@ -261,6 +367,15 @@ SELECT_DATA_MENU(){
    *) SELECT_DATA_MENU "Please enter a valid option." ;;
 esac
 }
+
+SELECT_ALL_BIKES(){
+	AVAILABLE_BIKES=$($PSQL "SELECT bike_id, type, size FROM bikes WHERE available=TRUE ORDER BY bike_id")
+	echo "$AVAILABLE_BIKES"
+	SELECT_DATA_MENU
+}
+
+## Update Data Management ##
+
 UPDATE_DATA_MENU(){
    if [[ $1 ]]
    then
@@ -279,143 +394,25 @@ UPDATE_DATA_MENU(){
 esac
 }
 
-
-
-CREATE_DATABASE(){
-	$PSQL_CreateDatabase "CREATE DATABASE bikes;"
-	CREATE_DATABASE_AND_TABLES_MENU
-}
-CREATE_TABLE_BIKES(){
-	$PSQL "CREATE TABLE bikes();"
-	$PSQL "ALTER TABLE bikes ADD COLUMN bike_id SERIAL PRIMARY KEY;"
-	$PSQL "ALTER TABLE bikes ADD COLUMN type VARCHAR(50) NOT NULL;"
-	$PSQL "ALTER TABLE bikes ADD COLUMN size INT NOT NULL;"
-	$PSQL "ALTER TABLE bikes ADD COLUMN available boolean NOT NULL Default(TRUE)";
-	CREATE_DATABASE_AND_TABLES_MENU "Created Tables Bikes"
-	
-}
-CREATE_TABLE_CUSTOMERS(){
-	$PSQL "CREATE TABLE customers();"
-	$PSQL "ALTER TABLE customers ADD COLUMN customer_id SERIAL PRIMARY KEY;"
-	$PSQL "ALTER TABLE customers ADD COLUMN phone VARCHAR(15) NOT NULL UNIQUE;"
-	$PSQL "ALTER TABLE customers ADD COLUMN name VARCHAR(40) NOT NULL;"
-	CREATE_DATABASE_AND_TABLES_MENU
-}
-CREATE_TABLE_RENTALS(){
-	$PSQL "CREATE TABLE rentals();"
-	$PSQL "ALTER TABLE rentals ADD COLUMN rental_id SERIAL PRIMARY KEY;"
-	$PSQL "ALTER TABLE rentals ADD COLUMN customer_id INT NOT NULL UNIQUE;"
-	$PSQL "ALTER TABLE rentals ADD FOREIGN KEY(customer_id) REFERENCES customers(customer_id);"
-	$PSQL "ALTER TABLE rentals ADD COLUMN bike_id INT NOT NULL;"
-	$PSQL "ALTER TABLE rentals ADD FOREIGN KEY(bike_id) REFERENCES bikes(bike_id);"
-	$PSQL "ALTER TABLE rentals ADD COLUMN date_rented DATE NOT NULL Default(Now());"
-	$PSQL "ALTER TABLE rentals ADD COLUMN date_returned DATE;"
-	CREATE_DATABASE_AND_TABLES_MENU
-}
-
-
-
-
-
-
-LIST_DATABASES(){
-	$PSQL_CreateDatabase "\l"
-	LIST_SCHEMA_MENU "Listed Databases"
-}
-LIST_TABLES(){
-	$PSQL "\dt+"
-	LIST_SCHEMA_MENU "Listed Tables"
-}
-LIST_TABLE_BIKES(){
-	$PSQL "\d bikes"
-	LIST_SCHEMA_MENU "Listed Table Bikes"
-}
-LIST_TABLE_CUSTOMERS(){
-	$PSQL "\d customers"
-	LIST_SCHEMA_MENU "Listed Table Customers"
-}
-LIST_TABLE_RENTALS(){
-	$PSQL "\d rentals"
-	LIST_SCHEMA_MENU "Listed Table Rentals"
-}
-
-
-
-
-
-
-DELETE_DATABASE(){
-	$PSQL_CreateDatabase "DROP DATABASE bikes;"
-	DELETE_DATABASE_MANAGEMENT_MENU
-}
-DELETE_TABLE_BIKES(){
-	$PSQL "DROP TABLE bikes;"
-	DELETE_DATABASE_MANAGEMENT_MENU
-}
-DELETE_TABLE_CUSTOMERS(){
-	$PSQL "DROP TABLE customers;"
-	DELETE_DATABASE_MANAGEMENT_MENU
-}
-DELETE_TABLE_RENTALS(){
-	$PSQL "DROP TABLE rentals;"
-	DELETE_DATABASE_MANAGEMENT_MENU
-}
-
-
-
-
-
-
-INSERT_EXAMPLE_BIKES_DATA(){
-	$PSQL "INSERT INTO bikes (type, size) VALUES ('Mountain', 27);"
-	$PSQL "INSERT INTO bikes (type, size) VALUES ('Mountain', 28);"
-	$PSQL "INSERT INTO bikes (type, size) VALUES ('Mountain', 29);"
-	$PSQL "INSERT INTO bikes (type, size) VALUES ('Road', 27);"
-	$PSQL "INSERT INTO bikes (type, size) VALUES ('Road', 28);"
-	$PSQL "INSERT INTO bikes (type, size) VALUES ('Road', 29);"
-	$PSQL "INSERT INTO bikes (type, size) VALUES ('BMX', 19);"
-	$PSQL "INSERT INTO bikes (type, size) VALUES ('BMX', 20);"
-	$PSQL "INSERT INTO bikes (type, size) VALUES ('BMX', 21);"
-	DATABASE_MANAGEMENT_MENU "Inserted Example Bikes"
-}
-
-
-
-
-
-
-SELECT_ALL_BIKES(){
-	AVAILABLE_BIKES=$($PSQL "SELECT bike_id, type, size FROM bikes WHERE available=TRUE ORDER BY bike_id")
-	echo "$AVAILABLE_BIKES"
-	SELECT_DATA_MENU
-}
-
-
-
-
-
 UPDATE_ALL_BIKES_AVAILABLE(){
 	AVAILABLE_BIKES=$($PSQL "UPDATE bikes SET AVAILABLE = true;")
 	UPDATE_DATA_MENU
 }
+
 UPDATE_ALL_BIKES_AVAILABLE_EXCEPT_BMX(){
 	AVAILABLE_BIKES=$($PSQL "UPDATE bikes SET available = TRUE WHERE type != 'BMX';")
 	UPDATE_DATA_MENU
 }
+
 UPDATE_ALL_BIKES_UNAVAILABLE(){
 	AVAILABLE_BIKES=$($PSQL "UPDATE bikes SET AVAILABLE = false;")
 	UPDATE_DATA_MENU
 }
 
-
-
-
-
-
-
-
+## Exit & End Program Management ##
 
 EXIT(){
    echo -e "\nClosing Program.\n"
 }
+
 MAIN_MENU
