@@ -286,7 +286,7 @@ DELETE_DATABASE_MANAGEMENT_MENU(){
       echo -e "\n$1"
    fi
    echo -e "\n~~~~~ Delete Database & Tables Menu ~~~~~"
-   echo -e "\n0. Return To Database Management Menu\n1. Delete Database Database\n2. Delete Table Bikes\n3. Delete Table Customers\n4. Delete Table Rentals\n"
+   echo -e "\n0. Return To Database Management Menu\n1. Delete Database\n2. Delete Table Bikes\n3. Delete Table Customers\n4. Delete Table Rentals\n"
    echo "Enter Command: "
    read DATABASE_MANAGEMENT_MENU_SELECTION
    case $DATABASE_MANAGEMENT_MENU_SELECTION in
